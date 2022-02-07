@@ -15,28 +15,28 @@ const PRIORITY = {
 }
 
 function addTask (task, priority) {
-  task = { 
-    name     : task, 
-    status   : DEFAULT_STATUS, 
-    priority : priority,
-  };
-  list.push(task);
+  let findTask = list.find(el => el.name === task);
+  if(!findTask) {
+    list.push({
+      name     : task, 
+      status   : DEFAULT_STATUS, 
+      priority : priority,
+    });
+  }
 }
 
 function changeStatus (task, status) {
-  for (let key of list) {
-    if(key.name === task) {
-      key.status = status;
-    }    
+  let taskChangeStatus = list.find(el => el.name === task); 
+  if(taskChangeStatus) {
+    taskChangeStatus.status = status;
   }
 }
 
 function deleteTask (task) {
-  list.forEach((el, i, arr) => {
-    if (el.name === task) {
-      arr.splice(i, 1);
-    }
-  })
+  let taskIndexDelete = list.findIndex(el => el.name === task);
+  if(taskIndexDelete > -1) {
+    list.splice(taskIndexDelete, 1);
+  }
 }
 
 function showBy(argument) {
@@ -59,11 +59,11 @@ function showBy(argument) {
   }
   
   for (let key in statusList) {
-    resultStatus += `${key}\n${statusList[key] || ' -\n'}`;
+    resultStatus += `${key}\n${statusList[key] || ' -\n'}\n`;
   }
 
   for (let key in priorityList) {
-    resultPriority += `${key}\n${priorityList[key] || ' -\n'}`;
+    resultPriority += `${key}\n${priorityList[key] || ' -\n'}\n`;
   }
 
   return argument === 'priority' ? resultPriority
@@ -71,12 +71,16 @@ function showBy(argument) {
 }
 
 addTask('make a walk', 'high');
+addTask('make a walk', 'high');
 addTask('read english', 'high');
 addTask('do nothing', 'low');
 addTask('take a shower', 'high');
-changeStatus('make a walk', 'In progress'); 
-deleteTask('test'); 
+changeStatus('create post', 'In progress'); 
+changeStatus('create a post', 'Done');
+deleteTask('create  post'); 
 deleteTask('create a post');
+deleteTask('test');
+changeStatus('read english', 'In progress' )
 deleteTask('do nothing');
 console.log(showBy(1));
 console.log(showBy('priority'));
